@@ -80,7 +80,8 @@ SRC		=	ft_abs.c \
 				ft_isspace.c \
 				ft_list_size.c \
 				ft_mem_alloc.c \
-				ft_words.c
+				ft_words.c \
+				get_next_line.c 
 
 HDR = libft.h
 OFL = $(SRC:.c=.o)

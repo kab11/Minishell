@@ -13,10 +13,19 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <string.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/uio.h>
+# include <unistd.h>
 # include <stdlib.h>
+# include <string.h>
 # include <stdio.h>
 # include <unistd.h>
+
+# define BUFF_SIZE 8
+# define GNL_ERROR -1
+# define GNL_OKAY 1
+# define GNL_EOF NULL
 
 int					ft_abs(int i);
 int					ft_atoi(const char *str);
@@ -97,5 +106,7 @@ int					ft_isspace(int c);
 int					ft_list_size(t_list *begin_list);
 char				*ft_mem_alloc(char const *str, size_t n);
 int					ft_words(char const *str, const char ch);
+
+int					get_next_line(const int fd, char **line);
 
 #endif

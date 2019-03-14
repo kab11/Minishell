@@ -15,7 +15,9 @@ NAME	=	minishell
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror
 
-SRC		=	main.c
+SRC		=	main.c \
+			mini_execute.c \
+			mini_parse.c
 
 INC_FT	=	-I includes/libft
 LINK_FT	=	-L includes/libft -lft
