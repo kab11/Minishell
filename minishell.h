@@ -24,8 +24,7 @@
 # include <unistd.h>
 # include "libft.h"
 # include "ft_printf.h"
-
-# define BUF 32
+# include <string.h>
 
 # define ANSI_COLOR_RED		"\x1b[31m"
 # define ANSI_COLOR_MAGENTA	"\x1b[35m"

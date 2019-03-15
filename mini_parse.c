@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/14 11:47:35 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/14 11:47:44 by kblack           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -20,9 +9,23 @@
 char **parse_user_input(char *line)
 {
 	char **arr;
+	char *parsed;
+	int i;
 
-	arr = (char**)malloc(ft_strlen(line) * sizeof(char*));
-	arr = ft_strsplit(line, ' ');
+	i = 0;
+	if (!(arr = malloc(ft_strlen(line) * sizeof(char*) + 1)))
+	{
+		ft_printf("malloc failed");
+		exit(1);
+	}
+	parsed = strtok(line, " ");
+	while (parsed != NULL)
+	{
+		arr[i] = parsed;
+		i++;
+		parsed = strtok(NULL, " ");;
+	}
+	arr[i] = NULL;
 	return (arr);
 }
 

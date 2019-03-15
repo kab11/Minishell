@@ -21,6 +21,13 @@
 	fork(): allows one process, the parent prcoess, to create a new process, the child
 	the new child pocesses an (almost) exact duplicate of the parent; the child get a copy of the parent's
 	stack, data, heap, and text segments 
+	-	e.g. A network server process may listen for incoming clinet requests and create a new child process
+		to handle each request; meanwhile, the server process continues to listen for further client connections
+	-	with fork() now 2 processes exist bu the have seperate copies of the stack, data, and heap segments 
+	-	after using fork() there isn't a way to tell which of the 2 processes is next in the CPU; this can lead
+		to errors called "race conditions"
+	-	implements "copy-on-write": initially fork() sets up things so that the page-table entries refer to the
+		same physical memory and the pages are marked as 'read-only'
 
 	exit(status): terminates a process, making all resources avaiable for reallocation by the kernel;
 	the status arg is an integer that determines the termination statu for the process; using wait() system
@@ -29,6 +36,7 @@
 	wait(&status): 1) if child hasn't been terminated by exit(), wait() suspends execution of the process until
 	one of its children has been terminated; 2) the termination status of the child is returned in the status
 	argumnet of wait()
+	-	wait(&): causes the process to run in the background 
 
 	execve(pathname, argv, envp): loads a new program into a process's memory
 */
@@ -86,11 +94,7 @@ char *get_info()
 	return (line);
 }
 
-/*
-** Reads, Parses, and Executes the shell
-*/
-
-int main()
+void mini_loop()
 {
 	int status;
 	char *line;
@@ -104,5 +108,14 @@ int main()
 		args = parse_user_input(line);
 		status = execute(args);
 	}
+}
+
+/*
+** Reads, Parses, and Executes the shell
+*/
+
+int main()
+{
+	mini_loop();
 	return (0);
 }
