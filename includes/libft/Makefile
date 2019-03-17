@@ -60,6 +60,7 @@ SRC		=	ft_abs.c \
 				ft_strncat.c \
 				ft_strncmp.c \
 				ft_strncpy.c \
+				ft_strndup.c \
 				ft_strnequ.c \
 				ft_strnew.c \
 				ft_strnstr.c \
@@ -81,7 +82,7 @@ SRC		=	ft_abs.c \
 				ft_list_size.c \
 				ft_mem_alloc.c \
 				ft_words.c \
-				get_next_line.c 
+				get_next_line.c
 
 HDR = libft.h
 OFL = $(SRC:.c=.o)

@@ -15,7 +15,11 @@ NAME	=	minishell
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror
 
-SRC		=	main.c \
+SRC		=	cd_command.c \
+			echo_command.c \
+			env_command.c \
+			exit_command.c \
+			main.c \
 			mini_execute.c \
 			mini_parse.c
 

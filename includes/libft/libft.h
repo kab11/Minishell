@@ -76,6 +76,7 @@ char				*ft_strncat(char *restrict s1, const char *restrict s2,
 						size_t n);
 int					ft_strncmp (const char *str1, const char *str2, size_t n);
 char				*ft_strncpy(char *dst, char *src, size_t n);
+char				*ft_strndup(char *src, size_t n);
 int					ft_strnequ(char const *s1, char const *s2, size_t n);
 char				*ft_strnew(size_t size);
 char				*ft_strnstr(const char *str, const char *find, size_t len);

@@ -12,18 +12,18 @@
 
 #include "libft.h"
 
-char				*ft_strndup(char *src, size_t n)
-{
-	char			*dup;
+// char				*ft_strndup(char *src, size_t n)
+// {
+// 	char			*dup;
 
-	dup = (char *)malloc(sizeof(char) * (n + 1));
-	if (dup)
-	{
-		ft_strncpy(dup, src, n);
-		dup[n] = '\0';
-	}
-	return (dup);
-}
+// 	dup = (char *)malloc(sizeof(char) * (n + 1));
+// 	if (dup)
+// 	{
+// 		ft_strncpy(dup, src, n);
+// 		dup[n] = '\0';
+// 	}
+// 	return (dup);
+// }
 
 static t_list		*get_file(t_list **list, int fd)
 {

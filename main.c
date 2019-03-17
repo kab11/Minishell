@@ -13,8 +13,19 @@
 #include "minishell.h"
 
 /*
+	BUILTINS:
+	echo			ch 			setenv		pwd		
+	unsetenv		env 		exit
+
+	EXPANSIONS:
+	$				~
+*/
+
+/*
 	SIGNALS
-	-	ctrl-c = sigint 
+	-	ctrl-c = SIGINT ==> causes the program to exit 
+	-	ctrl-z = SIGTSTP ==> stops the current runnning process 
+	-	signal handler is a pre-defined function which is invoked when the signal is received 
 */
 
 /*
@@ -80,6 +91,15 @@
 ** reads a line from stdin using get_next_line()
 */
 
+t_env	*new_node(void)
+{
+	t_env	*new_node;
+
+	new_node = (t_env*)malloc(sizeof(t_env));
+	ft_bzero(new_node, sizeof(t_env));
+	return (new_node);
+}
+
 char *get_info()
 {
 	char *line;
@@ -87,11 +107,8 @@ char *get_info()
 
 	arr = (char**)malloc(sizeof(char*));
 	if (get_next_line(0, &line) == 1)
-	{
-		if (ft_strcmp(line, "exit") == 0)
-			return (0);
-	}
-	return (line);
+			return (line);
+	return (NULL);
 }
 
 void mini_loop()
@@ -111,11 +128,41 @@ void mini_loop()
 }
 
 /*
+** Get environment variables and store in structure in 
+** key-value pairs
+*/
+
+void get_env_vars(t_shell *sh, char **envp)
+{
+	int i;
+	size_t sub;
+	t_env *node;
+
+	i = 0;
+	node = sh->env_info;
+	while (envp[i])
+	{
+		sub = strchr(envp[i], '=') - envp[i];
+		node = new_node();
+		node->name = ft_strndup(envp[i], sub);
+		node->value = ft_strdup(envp[i] + sub + 1);
+		node = node->next;
+		i++;
+	}
+}
+
+/*
 ** Reads, Parses, and Executes the shell
 */
 
-int main()
+int main(int argc, char **argv, char **envp)
 {
+	t_shell sh;
+
+	(void)argc;
+	(void)argv;
+	ft_bzero(&sh, sizeof(sh));
+	get_env_vars(&sh, envp);
 	mini_loop();
 	return (0);
 }
