@@ -24,15 +24,14 @@
 
 int handle_env(char **args, t_shell *sh)
 {
-	int i;
+	t_env *var;
 
-	i = 0;
-	(void)sh;
-	printf("YOU'RE IN ENV!\n");
-	while (args[i])
+	(void)args;
+	var = sh->env_info;
+	while (var)
 	{
-		printf("arg[%d] = %s\n", i, args[i]);
-		i++;
+		ft_printf("%s = %s\n", var->key, var->value);
+		var = var->next;
 	}
 	return(1);
 }
