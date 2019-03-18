@@ -27,43 +27,42 @@
 	  ** SUCCESS: return 0 FAIL: return -1
 */
 
+/*******
+ATM SETENV APPENDS TO THE VERY END OF THE LIST
+NEED TO CHANGE TO INSERTING BEFORE THE cur ENV VAR
+********/
+
 int handle_setenv(char **args, t_shell *sh)
 {
 	int i;
 	size_t sub;
 	t_env *new;
-	t_env *node;
+	t_env *prev;
+	t_env *cur;
 
 	i = 1;
-	new = NULL;
-	node = sh->env_info;
-	while (node->next != NULL && ft_strcmp(node->key, "_") != 0)
-		node = node->next;
+	cur = sh->env_info;
+	while (cur->next != NULL && ft_strcmp(cur->key, "_") != 0)
+	{
+		prev = cur;
+		cur = cur->next;
+	}
 	while (args[i])
 	{
 		new = new_node();
 		sub = strchr(args[i], '=') - args[i];
-		new->next = new_node();
 		new->key = ft_strndup(args[i], sub);
 		new->value = ft_strdup(args[i] + sub + 1);
-		if (node == NULL)
-			node = new;
+		if (cur == NULL)
+			cur = new;  
 		else
 		{
-			node->next = new;
-			node = new;
+			new->next = cur;
+			prev->next = new;
+			prev = new;
 		}
 		i++;
 	}
-	node->next = NULL;
+	cur->next = NULL;
 	return (1);
 }
-
-
-// int handle_setenv(char **args, t_shell *sh)
-// {
-// 	(void)args;
-// 	(void)sh;
-// 	printf("YOU'RE IN SETENV!\n");
-// 	return (1);
-// }
