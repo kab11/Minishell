@@ -24,7 +24,7 @@ int handle_env(char **args, t_shell *sh)
 	var = sh->env_info;
 	while (var)
 	{
-		ft_printf("%s = %s\n", var->key, var->value);
+		ft_printf("%s=%s\n", var->key, var->value);
 		var = var->next;
 	}
 	return(1);

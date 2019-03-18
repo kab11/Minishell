@@ -42,27 +42,34 @@ int handle_setenv(char **args, t_shell *sh)
 
 	i = 1;
 	cur = sh->env_info;
-	while (cur->next != NULL && ft_strcmp(cur->key, "_") != 0)
+	if (args[i])
 	{
-		prev = cur;
-		cur = cur->next;
-	}
-	while (args[i])
-	{
-		new = new_node();
-		sub = strchr(args[i], '=') - args[i];
-		new->key = ft_strndup(args[i], sub);
-		new->value = ft_strdup(args[i] + sub + 1);
-		if (cur == NULL)
-			cur = new;  
-		else
+		if (ft_strchr(args[i], '=') == NULL)
+			return (1);
+		while (cur->next != NULL && ft_strcmp(cur->key, "_") != 0)
 		{
-			new->next = cur;
-			prev->next = new;
-			prev = new;
+			prev = cur;
+			cur = cur->next;
 		}
-		i++;
+		while (args[i])
+		{
+			new = new_node();
+			sub = ft_strchr(args[i], '=') - args[i];
+			new->key = ft_strndup(args[i], sub);
+			new->value = ft_strdup(args[i] + sub + 1);
+			if (cur == NULL)
+				cur = new;  
+			else
+			{
+				new->next = cur;
+				prev->next = new;
+				prev = new;
+			}
+			i++;
+		}
+		cur->next = NULL;
 	}
-	cur->next = NULL;
+	else
+		handle_env(args, sh);
 	return (1);
 }
