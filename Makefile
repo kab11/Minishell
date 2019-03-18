@@ -22,7 +22,8 @@ SRC		=	cd_command.c \
 			free_list.c \
 			main.c \
 			mini_execute.c \
-			mini_parse.c
+			mini_parse.c \
+			setenv_command.c
 
 INC_FT	=	-I includes/libft
 LINK_FT	=	-L includes/libft -lft

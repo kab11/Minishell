@@ -26,7 +26,7 @@
 # include "ft_printf.h"
 # include <string.h>
 
-# define BUILTIN_COUNT 4
+# define BUILTIN_COUNT 5
 # define PATH_OPT ".~-"
 
 # define ANSI_COLOR_RED		"\x1b[31m"
@@ -67,7 +67,7 @@ int handle_setenv(char **args, t_shell *sh);
 int handle_unsetenv(char **args, t_shell *sh);
 
 void get_env_vars(t_shell *sh, char **envp);
-
+t_env	*new_node(void);
 void	free_all_files(t_env *files);
 
 #endif

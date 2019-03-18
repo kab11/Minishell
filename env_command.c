@@ -13,13 +13,7 @@
 #include "minishell.h"
 
 /*
-	run a program in a modified environment; -c expansion: changes working DIR 
-
-	environment represents a set of name-value paris that can be used to hold arbitrary 
-	information 
-	- environment variables are created with setenv()
-	- env: runs a program using a modified copy of the shell's environment list;
-	  can be sued to add and remove definitions from the list copied from the shell
+** Prints out the current environment variables when env() is called 
 */
 
 int handle_env(char **args, t_shell *sh)

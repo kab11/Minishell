@@ -30,13 +30,40 @@
 int handle_setenv(char **args, t_shell *sh)
 {
 	int i;
+	size_t sub;
+	t_env *new;
+	t_env *node;
 
-	i = 0;
-	printf("YOU'RE IN SETENV!\n");
+	i = 1;
+	new = NULL;
+	node = sh->env_info;
+	while (node->next != NULL && ft_strcmp(node->key, "_") != 0)
+		node = node->next;
 	while (args[i])
 	{
-		printf("arg[%d] = %s\n", i, args[i]);
+		new = new_node();
+		sub = strchr(args[i], '=') - args[i];
+		new->next = new_node();
+		new->key = ft_strndup(args[i], sub);
+		new->value = ft_strdup(args[i] + sub + 1);
+		if (node == NULL)
+			node = new;
+		else
+		{
+			node->next = new;
+			node = new;
+		}
 		i++;
 	}
+	node->next = NULL;
 	return (1);
 }
+
+
+// int handle_setenv(char **args, t_shell *sh)
+// {
+// 	(void)args;
+// 	(void)sh;
+// 	printf("YOU'RE IN SETENV!\n");
+// 	return (1);
+// }
