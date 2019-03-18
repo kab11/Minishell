@@ -12,11 +12,12 @@
 
 #include "minishell.h"
 
-int handle_echo(char **args)
+int handle_echo(char **args, t_shell *sh)
 {
 	int i;
 
 	i = 1;
+	(void)sh;
 	while (args[i])
 	{
 		ft_printf("%s ", args[i]);

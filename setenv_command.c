@@ -12,7 +12,22 @@
 
 #include "minishell.h"
 
-int handle_setenv(char **args)
+/*
+	[	int setenv(const char *name, const char *value, int overwrite)	]
+
+	- setenv() function creates a new environment variable by allocating a memory
+	  buffer for a string of the form name=value, and copying the strings pointed
+	  to by name and value into that buffer 
+	- it adds the '=' sign
+	- doesn't change the env if the var identified by 'name' already exists and
+	  "overwrite" has the value; if "overwrite" is non-zero the env is changed
+	- setenv() copies its elements; therefore, the contents of 'name' and 'value'
+	  can be modified without affecting the env and you can use auto variables 
+
+	  ** SUCCESS: return 0 FAIL: return -1
+*/
+
+int handle_setenv(char **args, t_shell *sh)
 {
 	int i;
 

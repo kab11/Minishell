@@ -48,10 +48,10 @@
 */
 
 struct s_dispatch builtins[BUILTIN_COUNT] = {
-	{"cd", &handle_cd},
-	{"env", &handle_env},
-	{"echo", &handle_echo},
-	{"exit", &handle_exit}
+	{"cd", handle_cd},
+	{"env", handle_env},
+	{"echo", handle_echo},
+	{"exit", handle_exit}
 	// {"setenv", &handle_setenv},
 	// {"unsetenv", &handle_unsetenv}
 	};
@@ -84,7 +84,7 @@ int launch(char **arr)
 	return (1);
 }
 
-int execute(char **arr)
+int execute(char **arr, t_shell *sh)
 {
 	int i;
 
@@ -94,7 +94,7 @@ int execute(char **arr)
 	while (i < BUILTIN_COUNT)
 	{
 		if (ft_strcmp(arr[0], builtins[i].key) == 0)
-			return(builtins[i].fxnptr(arr));
+			return(builtins[i].fxnptr(arr, sh));
 		i++;
 	}
 	return (launch(arr));

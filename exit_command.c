@@ -20,8 +20,9 @@
 ** and the child dies immediately 
 */
 
-int handle_exit(char **args)
+int handle_exit(char **args, t_shell *sh)
 {
+	(void)sh;
 	if (args[1])
 	{
 		if(args[2])

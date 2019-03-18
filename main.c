@@ -111,25 +111,26 @@ char *get_info()
 	return (NULL);
 }
 
-void mini_loop()
+void mini_loop(t_shell *sh)
 {
 	int status;
 	char *line;
 	char **args;
 
 	status = 1;
+	sh->display = "$>";
 	while (status)
 	{
-		ft_printf(BOLDCYAN "$> " RESET);
+		ft_printf(BOLDCYAN "%s " RESET, sh->display);
 		line = get_info();
 		args = parse_user_input(line);
-		status = execute(args);
+		status = execute(args, sh);
 	}
 }
 
 /*
-** Get environment variables and store in structure in 
-** key-value pairs
+** Get environment variables and stores them structure
+** of key-value pairs
 */
 
 void get_env_vars(t_shell *sh, char **envp)
@@ -137,18 +138,28 @@ void get_env_vars(t_shell *sh, char **envp)
 	int i;
 	size_t sub;
 	t_env *node;
+	t_env *tmp;
 
 	i = 0;
-	node = sh->env_info;
+	node = NULL;
+	tmp = NULL;
 	while (envp[i])
 	{
-		sub = strchr(envp[i], '=') - envp[i];
 		node = new_node();
-		node->name = ft_strndup(envp[i], sub);
+		sub = strchr(envp[i], '=') - envp[i];
+		node->next = new_node();
+		node->key = ft_strndup(envp[i], sub);
 		node->value = ft_strdup(envp[i] + sub + 1);
-		node = node->next;
+		if (sh->env_info != NULL)
+		{
+			tmp->next = node;
+			tmp = node;
+		}
+		else
+			sh->env_info = tmp = node;
 		i++;
 	}
+	tmp->next = NULL;
 }
 
 /*
@@ -163,6 +174,6 @@ int main(int argc, char **argv, char **envp)
 	(void)argv;
 	ft_bzero(&sh, sizeof(sh));
 	get_env_vars(&sh, envp);
-	mini_loop();
+	mini_loop(&sh);
 	return (0);
 }

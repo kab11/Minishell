@@ -22,11 +22,12 @@
 	  can be sued to add and remove definitions from the list copied from the shell
 */
 
-int handle_env(char **args)
+int handle_env(char **args, t_shell *sh)
 {
 	int i;
 
 	i = 0;
+	(void)sh;
 	printf("YOU'RE IN ENV!\n");
 	while (args[i])
 	{

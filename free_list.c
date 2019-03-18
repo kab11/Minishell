@@ -1,37 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unsetenv_command.c                                 :+:      :+:    :+:   */
+/*   free_list.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/15 20:34:02 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/15 20:34:11 by kblack           ###   ########.fr       */
+/*   Created: 2019/03/17 22:20:58 by kblack            #+#    #+#             */
+/*   Updated: 2019/03/17 22:21:08 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-	[	int unsetenv(const char *name)	]
-	unsetenv function removes the variable identified by 'name' from the env 
-	- 'name' should not include '=' sign
-	- 
-
-
-	** SUCCESS: return 0 FAIL: return -1
-*/
-
-int handle_unsetenv(char **args, t_shell *sh)
+void	free_file(t_env *file)
 {
-	int i;
+	(file->key != NULL) ? free(file->key) : 0;
+	(file->value != NULL) ? free(file->value) : 0;
+	free(file);
+	file = NULL;
+}
 
-	i = 0;
-	printf("YOU'RE IN UNSETENV!\n");
-	while (args[i])
+void	free_all_files(t_env *files)
+{
+	t_env	*temp;
+
+	while (files != NULL)
 	{
-		printf("arg[%d] = %s\n", i, args[i]);
-		i++;
+		temp = files->next;
+		free_file(files);
+		files = temp;
 	}
-	return (1);
 }

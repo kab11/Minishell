@@ -19,6 +19,8 @@ char **parse_user_input(char *line)
 		exit(1);
 	}
 	parsed = strtok(line, " ");
+	while (ft_isspace(*parsed))
+		parsed++;
 	while (parsed != NULL)
 	{
 		arr[i] = parsed;

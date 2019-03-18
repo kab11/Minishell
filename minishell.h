@@ -27,6 +27,7 @@
 # include <string.h>
 
 # define BUILTIN_COUNT 4
+# define PATH_OPT ".~-"
 
 # define ANSI_COLOR_RED		"\x1b[31m"
 # define ANSI_COLOR_MAGENTA	"\x1b[35m"
@@ -34,34 +35,39 @@
 # define RESET				"\x1b[0m"
 # define BACK_YELL			"\x1b[47m"
 
-typedef int (*fxnptr_t)(char**);
-struct s_dispatch
-{
-	char *key;
-	fxnptr_t fxnptr;
-};
-
 typedef struct s_env
 {
-	char *name;
+	char *key;
 	char *value;
 	struct s_env *next;
 } t_env;
 
 typedef struct s_shell
 {
+	char *display;
+	char *pwd;
 	struct s_env *env_info;
 } t_shell;
 
+typedef int (fxnptr_t)(char**, t_shell*);
+struct s_dispatch
+{
+	char *key;
+	fxnptr_t *fxnptr;
+};
+
 char **parse_user_input(char *line);
-int execute(char **arr);
+int execute(char **arr, t_shell *sh);
 
-int handle_cd(char **args);
-int handle_echo(char **args);
-int handle_env(char **args);
-int handle_exit(char **args);
-int handle_setenv(char **args);
-int handle_unsetenv(char **args);
+int handle_cd(char **args, t_shell *sh);
+int handle_echo(char **args, t_shell *sh);
+int handle_env(char **args, t_shell *sh);
+int handle_exit(char **args, t_shell *sh);
+int handle_setenv(char **args, t_shell *sh);
+int handle_unsetenv(char **args, t_shell *sh);
 
+void get_env_vars(t_shell *sh, char **envp);
+
+void	free_all_files(t_env *files);
 
 #endif
