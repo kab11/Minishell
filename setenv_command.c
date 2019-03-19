@@ -36,54 +36,11 @@
 ** 3) return (1)
 */
 
-
-// if (ft_strcmp(cur->key,args[i]))
-// {
-// 	free(cur->value);
-// 	cur->value = ft_strdup(args[i])
-// }
-
-// int handle_setenv(char **args, t_shell *sh)
-// {
-// 	int i;
-// 	size_t sub;
-// 	t_env *new;
-// 	t_env *prev;
-// 	t_env *cur;
-
-// 	i = 1;
-// 	cur = sh->env_info;
-// 	if (args[i])
-// 	{
-// 		if (ft_strchr(args[i], '=') == NULL)
-// 			return (1);
-// 		while (cur->next != NULL && ft_strcmp(cur->key, "_") != 0)
-// 		{
-// 			prev = cur;
-// 			cur = cur->next;
-// 		}
-// 		while (args[i])
-// 		{
-// 			new = new_node();
-// 			sub = ft_strchr(args[i], '=') - args[i];
-// 			new->key = ft_strndup(args[i], sub);
-// 			new->value = ft_strdup(args[i] + sub + 1);
-// 			if (cur == NULL)
-// 				cur = new;  
-// 			else
-// 			{
-// 				new->next = cur;
-// 				prev->next = new;
-// 				prev = new;
-// 			}
-// 			i++;
-// 		}
-// 		cur->next = NULL;
-// 	}
-// 	else
-// 		handle_env(args, sh);
-// 	return (1);
-// }
+/*
+** Unhandled use case:
+** setenv kdlfknls flskd lskd USER=newuser lka slaks dalks
+** quotes ==> "" and ''
+*/
 
 void add_new_env_var(t_env *prev, t_env *cur, char *env_var, char *val)
 {
@@ -115,6 +72,11 @@ void check_env_var_exists(char **args, t_shell *sh)
 	i = 1;
 	while (args[i])
 	{
+
+		while (args[i] != NULL && ft_strchr(args[i], '=') == NULL)
+			i++;
+		if (args[i] == NULL)
+			break; 
 		cur = sh->env_info;
 		sub = ft_strchr(args[i], '=') - args[i];
 		key = ft_strndup(args[i], sub);
