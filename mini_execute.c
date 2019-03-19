@@ -52,7 +52,7 @@ struct s_dispatch builtins[BUILTIN_COUNT] = {
 	{"env", handle_env},
 	{"echo", handle_echo},
 	{"exit", handle_exit},
-	{"export", handle_setenv}
+	{"setenv", handle_setenv}
 	// {"unsetenv", &handle_unsetenv}
 	};
 

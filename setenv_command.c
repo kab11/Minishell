@@ -27,49 +27,147 @@
 	  ** SUCCESS: return 0 FAIL: return -1
 */
 
-/*******
-ATM SETENV APPENDS TO THE VERY END OF THE LIST
-NEED TO CHANGE TO INSERTING BEFORE THE cur ENV VAR
-********/
+/*
+** 1) Check if more than 1 argument
+**		- if not then call env
+** 2) Check if new env already exists
+**		- if so replace with new value
+**		- if not iterate to the end of the list and add new env var 
+** 3) return (1)
+*/
 
-int handle_setenv(char **args, t_shell *sh)
+
+// if (ft_strcmp(cur->key,args[i]))
+// {
+// 	free(cur->value);
+// 	cur->value = ft_strdup(args[i])
+// }
+
+// int handle_setenv(char **args, t_shell *sh)
+// {
+// 	int i;
+// 	size_t sub;
+// 	t_env *new;
+// 	t_env *prev;
+// 	t_env *cur;
+
+// 	i = 1;
+// 	cur = sh->env_info;
+// 	if (args[i])
+// 	{
+// 		if (ft_strchr(args[i], '=') == NULL)
+// 			return (1);
+// 		while (cur->next != NULL && ft_strcmp(cur->key, "_") != 0)
+// 		{
+// 			prev = cur;
+// 			cur = cur->next;
+// 		}
+// 		while (args[i])
+// 		{
+// 			new = new_node();
+// 			sub = ft_strchr(args[i], '=') - args[i];
+// 			new->key = ft_strndup(args[i], sub);
+// 			new->value = ft_strdup(args[i] + sub + 1);
+// 			if (cur == NULL)
+// 				cur = new;  
+// 			else
+// 			{
+// 				new->next = cur;
+// 				prev->next = new;
+// 				prev = new;
+// 			}
+// 			i++;
+// 		}
+// 		cur->next = NULL;
+// 	}
+// 	else
+// 		handle_env(args, sh);
+// 	return (1);
+// }
+
+void add_new_env_var(t_env *prev, t_env *cur, char *env_var, char *val)
+{
+	t_env *new;
+
+	new = new_node();
+	new->key = ft_strdup(env_var);
+	new->value = ft_strdup(val);
+	if (cur == NULL)
+		cur = new;
+	else
+	{
+		new->next = cur;
+		prev->next = new;
+		prev = new;
+	}
+	cur->next = NULL;
+}
+
+void check_env_var_exists(char **args, t_shell *sh)
 {
 	int i;
 	size_t sub;
-	t_env *new;
-	t_env *prev;
+	char *key;
+	char *val;
 	t_env *cur;
+	t_env *prev;
 
 	i = 1;
-	cur = sh->env_info;
-	if (args[i])
+	while (args[i])
 	{
-		if (ft_strchr(args[i], '=') == NULL)
-			return (1);
-		while (cur->next != NULL && ft_strcmp(cur->key, "_") != 0)
+		cur = sh->env_info;
+		sub = ft_strchr(args[i], '=') - args[i];
+		key = ft_strndup(args[i], sub);
+		val = ft_strdup(args[i] + sub + 1);
+		while (cur->next != NULL)
 		{
 			prev = cur;
+			if (ft_strcmp(cur->key, key) == 0)
+			{
+				free(cur->value);
+				cur->value = ft_strdup(val);
+				break ;
+			}
 			cur = cur->next;
 		}
-		while (args[i])
-		{
-			new = new_node();
-			sub = ft_strchr(args[i], '=') - args[i];
-			new->key = ft_strndup(args[i], sub);
-			new->value = ft_strdup(args[i] + sub + 1);
-			if (cur == NULL)
-				cur = new;  
-			else
-			{
-				new->next = cur;
-				prev->next = new;
-				prev = new;
-			}
-			i++;
-		}
-		cur->next = NULL;
+		if (cur == NULL || cur->next == NULL)
+			add_new_env_var(prev, cur, key, val);
+		free(key);
+		free(val);
+		i++;
 	}
-	else
+}
+
+
+int handle_setenv(char **args, t_shell *sh)
+{
+	if (!args[1])
 		handle_env(args, sh);
+	else
+		check_env_var_exists(args, sh);
 	return (1);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
