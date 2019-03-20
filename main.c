@@ -6,7 +6,7 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:27:10 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/13 15:27:50 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/18 23:24:07 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ void mini_loop(t_shell *sh)
 	{
 		ft_printf(BOLDCYAN "%s " RESET, sh->display);
 		line = get_info();
+		if (ft_strcmp(line, "") == 0)
+			continue;
 		args = parse_user_input(line);
 		status = execute(args, sh);
 	}
@@ -132,6 +134,21 @@ void mini_loop(t_shell *sh)
 ** Get environment variables and stores them structure
 ** of key-value pairs
 */
+
+void get_str_arr(int n, char **envp, t_shell *sh)
+{
+	char **tmp;
+	int i;
+
+	i = 0;
+	tmp = malloc(n * sizeof(char*));
+	while (envp[i])
+	{
+		tmp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	sh->arr = tmp;
+}
 
 void get_env_vars(t_shell *sh, char **envp)
 {
@@ -159,6 +176,7 @@ void get_env_vars(t_shell *sh, char **envp)
 			sh->env_info = tmp = node;
 		i++;
 	}
+	get_str_arr(i, envp, sh);
 	tmp->next = NULL;
 }
 
@@ -168,6 +186,7 @@ void get_env_vars(t_shell *sh, char **envp)
 
 int main(int argc, char **argv, char **envp)
 {
+	ft_printf("Starting minishell\n");
 	t_shell sh;
 
 	(void)argc;

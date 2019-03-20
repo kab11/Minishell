@@ -26,7 +26,7 @@
 # include "ft_printf.h"
 # include <string.h>
 
-# define BUILTIN_COUNT 5
+# define BUILTIN_COUNT 6
 # define PATH_OPT ".~-"
 
 # define ANSI_COLOR_RED		"\x1b[31m"
@@ -46,6 +46,7 @@ typedef struct s_shell
 {
 	char *display;
 	char *pwd;
+	char **arr;
 	struct s_env *env_info;
 } t_shell;
 
@@ -58,6 +59,7 @@ struct s_dispatch
 
 char **parse_user_input(char *line);
 int execute(char **arr, t_shell *sh);
+void get_env_vars(t_shell *sh, char **envp);
 
 int handle_cd(char **args, t_shell *sh);
 int handle_echo(char **args, t_shell *sh);

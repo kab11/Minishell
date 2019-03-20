@@ -52,11 +52,12 @@ struct s_dispatch builtins[BUILTIN_COUNT] = {
 	{"env", handle_env},
 	{"echo", handle_echo},
 	{"exit", handle_exit},
-	{"setenv", handle_setenv}
-	// {"unsetenv", &handle_unsetenv}
-	};
+	{"setenv", handle_setenv},
+	{"unset", handle_unsetenv}
+};
 
-int launch(char **arr)
+/* create a char ** to a array of string to pass in execve() */
+int launch(char **arr, t_shell *sh)
 {
 	int status;
 	pid_t childPID;
@@ -71,7 +72,7 @@ int launch(char **arr)
 	if (childPID == 0) /* Child */
 	{
 		ft_printf("Child created\n");
-		execve(arr[0], arr, NULL);
+		execve(arr[0], arr, sh->arr);
 		ft_printf("Child = %d\t Parent = %d\n", getpid(), getppid());
 	}
 	else /* Parent */
@@ -97,5 +98,5 @@ int execute(char **arr, t_shell *sh)
 			return(builtins[i].fxnptr(arr, sh));
 		i++;
 	}
-	return (launch(arr));
+	return (launch(arr, sh));
 }

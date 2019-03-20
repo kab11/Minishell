@@ -38,7 +38,6 @@
 
 /*
 ** Unhandled use case:
-** setenv kdlfknls flskd lskd USER=newuser lka slaks dalks
 ** quotes ==> "" and ''
 */
 
