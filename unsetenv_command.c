@@ -18,32 +18,72 @@
 	- 'name' should not include '=' sign
 */
 
+// void remove_env_var(char **args, t_shell *sh)
+// {
+// 	int i;
+// 	int j;
+// 	int len;
+
+// 	i = 1;
+// 	j = -1;
+// 	while (args[i])
+// 	{
+// 		j++;
+// 		len = ft_strlen(args[i]);
+// 		if (ft_strncmp(args[i], sh->arr[j], len) == 0 && sh->arr[j][len] == '=')
+// 		{
+// 			free(sh->arr[j]);
+// 			while (sh->arr[j])
+// 			{
+// 				sh->arr[j] = sh->arr[j + 1];
+// 				j++;
+// 			}
+// 			sh->arr[j] = NULL;
+// 			j = 0;
+// 			i++;
+// 		}
+// 	}
+// 	free_all_files(sh->env_info);
+// 	get_env_vars(sh, sh->arr);
+// }
+
+void delete_head_node(t_env *head)
+{
+	t_env *tmp;
+
+	if (head->next == NULL)
+		return;
+	head->key = head->next->key;
+	head->value = head->next->value;
+	tmp = head->next;
+	head->next = head->next->next;
+	free(tmp);
+	return;
+}
+
 void remove_env_var(char **args, t_shell *sh)
 {
 	int i;
-	int j;
-	int len;
+	t_env *head;
+	t_env *prev;
+	t_env *tmp;
 
 	i = 1;
-	j = -1;
+	head = sh->env_info;
 	while (args[i])
 	{
-		j++;
-		len = ft_strlen(args[i]);
-		if (ft_strncmp(args[i], sh->arr[j], len) == 0 && sh->arr[j][len] == '=')
-		{
-			free(sh->arr[j]);
-			while (sh->arr[j])
-			{
-				sh->arr[j] = sh->arr[j + 1];
-				j++;
-			}
-			sh->arr[j] = NULL;
-			j = 0;
-			i++;
-		}
+		if (ft_strcmp(head->key, args[i]) == 0)
+			delete_head_node(head);
+		prev = head;
+		while (prev->next != NULL && ft_strcmp(prev->next->key, args[i]) != 0)
+			prev = prev->next;	
+		if (prev->next == NULL || ft_strcmp(prev->next->key, "_") == 0)
+			return;
+		tmp = prev->next;
+		prev->next = prev->next->next;
+		free_file(tmp);
+		i++;
 	}
-	// get_env_vars(sh, sh->arr);
 }
 
 // void remove_env_var(char **args, t_shell *sh)
@@ -68,7 +108,7 @@ void remove_env_var(char **args, t_shell *sh)
 // 		{
 // 			lead = head->next;
 // 			lag = head;
-// 			prev = NULL;
+// 			prev = head;
 // 			key = ft_strdup(args[i]);
 // 			while (lead != NULL && lead->next != NULL)
 // 			{	

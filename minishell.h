@@ -71,5 +71,6 @@ int handle_unsetenv(char **args, t_shell *sh);
 void get_env_vars(t_shell *sh, char **envp);
 t_env	*new_node(void);
 void	free_all_files(t_env *files);
+void	free_file(t_env *file);
 
 #endif

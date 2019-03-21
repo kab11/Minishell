@@ -152,7 +152,7 @@ void get_str_arr(int n, char **envp, t_shell *sh)
 
 void get_env_vars(t_shell *sh, char **envp)
 {
-	int i;
+	int i; 
 	size_t sub;
 	t_env *node;
 	t_env *tmp;
