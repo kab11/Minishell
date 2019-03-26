@@ -13,9 +13,7 @@
 #include "minishell.h"
 
 /*
-	[	int unsetenv(const char *name)	]
-	unsetenv function removes the variable identified by 'name' from the env 
-	- 'name' should not include '=' sign
+** Unset removes environment variables from the list of variables that it tracks
 */
 
 void delete_head_node(t_env *head)
@@ -32,16 +30,29 @@ void delete_head_node(t_env *head)
 	return;
 }
 
+int number_of_args(char **args)
+{
+	int i;
+	int count;
+
+	i = 1;
+	count = 0;
+	while (args[i++])
+		count++;
+	return (count);
+}
+
 void remove_env_var(char **args, t_shell *sh)
 {
 	int i;
+	int count;
 	t_env *head;
 	t_env *prev;
 	t_env *tmp;
 
-	i = 1;
+	i = 0;
 	head = sh->env_info;
-	while (args[i])
+	while (args[++i])
 	{
 		if (ft_strcmp(head->key, args[i]) == 0)
 			delete_head_node(head);
@@ -49,11 +60,14 @@ void remove_env_var(char **args, t_shell *sh)
 		while (prev->next != NULL && ft_strcmp(prev->next->key, args[i]) != 0)
 			prev = prev->next;	
 		if (prev->next == NULL || ft_strcmp(prev->next->key, "_") == 0)
-			return;
+		{
+			if ((count = number_of_args(args)) == i)
+				return;
+			prev = head;
+		}
 		tmp = prev->next;
 		prev->next = prev->next->next;
 		free_file(tmp);
-		i++;
 	}
 }
 

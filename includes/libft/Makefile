@@ -6,7 +6,7 @@
 #    By: kblack <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/18 13:56:41 by kblack            #+#    #+#              #
-#    Updated: 2019/02/22 13:46:07 by kblack           ###   ########.fr        #
+#    Updated: 2019/03/21 12:57:46 by kblack           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,6 +68,7 @@ SRC		=	ft_abs.c \
 				ft_strsplit.c \
 				ft_strstr.c \
 				ft_strsub.c \
+				ft_strtok.c \
 				ft_strtrim.c \
 				ft_tolower.c \
 				ft_toupper.c \

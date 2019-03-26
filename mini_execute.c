@@ -47,6 +47,17 @@
 	3) point to the function; passing the pointer to another function is that same thing
 */
 
+/*
+	execve(): loads a new program into a process's memory
+	envp: specfies the environment list for the new program 
+	getcwd(): places a NULL terminated string containing the absolute pathname of the current
+			  woring directory into the allocated buffer pointed to by cwdbuf 
+*/
+
+/*
+	1) Get path name for arr[0]
+*/
+
 struct s_dispatch builtins[BUILTIN_COUNT] = {
 	{"cd", handle_cd},
 	{"env", handle_env},
@@ -56,13 +67,45 @@ struct s_dispatch builtins[BUILTIN_COUNT] = {
 	{"unset", handle_unsetenv}
 };
 
+
+char *find_path(char *cmd, t_shell *sh)
+{
+	t_env *list;
+	char **p;
+	char *tmp;
+	char *path;
+	int i;
+
+	i = -1;
+	p = NULL;
+	list = sh->env_info;
+	while (list)
+	{
+		if (ft_strcmp(list->key, "PATH") == 0)
+		{
+			p = ft_strsplit(list->value, ':');
+			break ;
+		}
+		list = list->next;
+	}
+	while (p[++i])
+	{
+		tmp = ft_strjoin(p[i], "/");
+		path = ft_strjoin(tmp, cmd);
+		if (access(path, F_OK) == 0)
+			return (path);
+	}
+	return (NULL);
+}
 /* create a char ** to a array of string to pass in execve() */
 int launch(char **arr, t_shell *sh)
 {
 	int status;
+	char *path;
 	pid_t childPID;
 	pid_t wait_ret;
 
+	(void)sh;
 	childPID = fork();
 	if (childPID < 0)
 	{
@@ -72,7 +115,9 @@ int launch(char **arr, t_shell *sh)
 	if (childPID == 0) /* Child */
 	{
 		ft_printf("Child created\n");
-		execve(arr[0], arr, sh->arr);
+
+		path = find_path(arr[0], sh);
+		execve(path, arr, sh->arr);
 		ft_printf("Child = %d\t Parent = %d\n", getpid(), getppid());
 	}
 	else /* Parent */
@@ -100,3 +145,4 @@ int execute(char **arr, t_shell *sh)
 	}
 	return (launch(arr, sh));
 }
+

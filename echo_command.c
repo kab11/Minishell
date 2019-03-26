@@ -12,6 +12,27 @@
 
 #include "minishell.h"
 
+expansion()
+{
+
+}
+
+void check_args(char *arg)
+{
+	int j;
+
+	j = 0;
+	while (arg[j])
+	{
+		if (arg[j] == '"' || arg[j] == '\'' || arg[j] == '\\')
+			j++;
+		if (arg[j] == '$' || arg[j] == '~')
+			expansion();
+		ft_printf("%c", arg[j]);
+		j++;
+	}
+}
+
 int handle_echo(char **args, t_shell *sh)
 {
 	int i;
@@ -20,7 +41,7 @@ int handle_echo(char **args, t_shell *sh)
 	(void)sh;
 	while (args[i])
 	{
-		ft_printf("%s ", args[i]);
+		check_args(args[i]);
 		i++;
 	}
 	if (i > 1)

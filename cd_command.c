@@ -33,7 +33,25 @@ int	check_dir(char *name)
 	return (0);
 }
 
-void find_env(char *name, t_shell *sh)
+void update_path(char *pwd, t_shell *sh)
+{
+	char **arr;
+	char *tmp;
+
+	arr = (char**)malloc(sizeof(char*) * 4);
+	arr[0] = NULL;
+	tmp = ft_strnew(PATH_MAX);
+	getcwd(tmp, PATH_MAX);
+	arr[1] = ft_strjoin("PWD=",tmp);
+	arr[2] = ft_strjoin("OLDPWD=", pwd);
+	arr[3] = 0;
+	handle_setenv(arr, sh);
+	free(arr[1]);
+	free(arr[2]);
+	free(arr);
+}
+
+void find_env(char *name, char *pwd, t_shell *sh)
 {
 	t_env *tmp;
 
@@ -43,6 +61,7 @@ void find_env(char *name, t_shell *sh)
 		if (ft_strcmp(tmp->key, name) == 0)
 		{
 			chdir(tmp->value);
+			update_path(pwd, sh);
 			break ;
 		}
 		tmp = tmp->next;
@@ -66,6 +85,20 @@ int check_user(char *name, t_shell *sh)
 	return (-1);
 }
 
+char *get_pwd(t_shell *sh)
+{
+	t_env *tmp;
+
+	tmp = sh->env_info;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, "PWD") == 0)
+			return (tmp->value);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 void change_dir(char *arg, t_shell *sh)
 {
 	char *name;
@@ -74,8 +107,7 @@ void change_dir(char *arg, t_shell *sh)
 
 	name = NULL;
 	user = NULL;
-	tmp = 0;
-	printf("arg ==> %s\n", arg);
+	tmp = 0;;
 	if (ft_strchr(arg, '~'))
 	{
 		if (arg[1])
@@ -85,19 +117,33 @@ void change_dir(char *arg, t_shell *sh)
 			if (tmp < 0)
 			{
 				ft_printf("cd: permission denied: /nfs/2018/%c/%s\n", arg[1], user);
+				free(user);
 				return ;
 			}
 		}
+		free(user);
 		name = "HOME";
-		find_env(name, sh);
+		find_env(name, get_pwd(sh), sh);
+	}
+	else if (ft_strchr(arg, '-'))
+	{
+		name = "OLDPWD";
+		find_env(name, get_pwd(sh), sh);
 	}
 	else if (ft_strcmp(arg, ".") == 0)
 	{
 		name = "PWD";
-		find_env(name, sh);
+		find_env(name, get_pwd(sh), sh);
 	}
 	else
-		chdir(arg);
+	{
+		if (chdir(arg) == 0)
+		{
+			update_path(get_pwd(sh), sh);
+			return;
+		}
+		printf("cd: no such file or directory: %s\n", arg);
+	}
 }
 
 int handle_cd(char **args, t_shell *sh)
@@ -119,7 +165,7 @@ int handle_cd(char **args, t_shell *sh)
 	else /* no arguments ONLY cd */
 	{
 		name = "HOME";
-		find_env(name, sh);
+		find_env(name, NULL, sh);
 	}
 	return (1);
 }

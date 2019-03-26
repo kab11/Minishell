@@ -111,6 +111,19 @@ char *get_info()
 	return (NULL);
 }
 
+void set_pwd(t_shell *sh)
+{
+	char *curr;
+	char *str;
+
+	free(sh->prompt);
+	curr = ft_strnew(PATH_MAX);
+	getcwd(curr, PATH_MAX);
+	str = ft_strrchr(curr, '/') + 1;
+	free(curr);
+	sh->prompt = ft_strdup(str);
+}
+
 void mini_loop(t_shell *sh)
 {
 	int status;
@@ -118,10 +131,11 @@ void mini_loop(t_shell *sh)
 	char **args;
 
 	status = 1;
-	sh->display = "$>";
 	while (status)
 	{
-		ft_printf(BOLDCYAN "%s " RESET, sh->display);
+		set_pwd(sh);
+		ft_printf(BOLDCYAN "%s" RESET, sh->prompt);
+		ft_printf(BOLDRED " -> " RESET);
 		line = get_info();
 		if (ft_strcmp(line, "") == 0)
 			continue;
@@ -157,13 +171,13 @@ void get_env_vars(t_shell *sh, char **envp)
 	t_env *node;
 	t_env *tmp;
 
-	i = 0;
+	i = -1;
 	node = NULL;
 	tmp = NULL;
-	while (envp[i])
+	while (envp[++i])
 	{
 		node = new_node();
-		sub = strchr(envp[i], '=') - envp[i];
+		sub = ft_strchr(envp[i], '=') - envp[i];
 		node->next = new_node();
 		node->key = ft_strndup(envp[i], sub);
 		node->value = ft_strdup(envp[i] + sub + 1);
@@ -174,7 +188,6 @@ void get_env_vars(t_shell *sh, char **envp)
 		}
 		else
 			sh->env_info = tmp = node;
-		i++;
 	}
 	get_str_arr(i, envp, sh);
 	tmp->next = NULL;

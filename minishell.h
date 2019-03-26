@@ -29,6 +29,7 @@
 # define BUILTIN_COUNT 6
 # define PATH_OPT ".~-"
 
+# define BOLDRED			"\x1b[31;1m"
 # define ANSI_COLOR_RED		"\x1b[31m"
 # define ANSI_COLOR_MAGENTA	"\x1b[35m"
 # define BOLDCYAN			"\033[1m\033[36m"
@@ -45,8 +46,10 @@ typedef struct s_env
 typedef struct s_shell
 {
 	char *display;
-	char *pwd;
+	char *prompt;
 	char **arr;
+	char *pwd;
+	char *PATH;
 	struct s_env *env_info;
 } t_shell;
 
