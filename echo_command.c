@@ -12,51 +12,52 @@
 
 #include "minishell.h"
 
-expansion()
+void expansion(char *str, t_shell *sh)
 {
+	t_env *list;
 
+	list = sh->env_info;
+	if (str[0] == '~')
+		ft_printf("%s", get_value(sh, "HOME"));
+	else if (str[0] == '$')
+	{
+		str = str + 1;
+		ft_printf("%s", get_value(sh, str));
+	}
 }
 
-void check_args(char *arg)
+void check_args(char *str, t_shell *sh)
 {
-	int j;
-
-	j = 0;
-	while (arg[j])
-	{
-		if (arg[j] == '"' || arg[j] == '\'' || arg[j] == '\\')
-			j++;
-		if (arg[j] == '$' || arg[j] == '~')
-			expansion();
-		ft_printf("%c", arg[j]);
-		j++;
-	}
+	(void)sh;
+	// printf("str = %s\n", str);
+	if (str[0] == '$' || str[0] == '~')
+		expansion(str, sh);
+	else
+		ft_printf("%s", str);
+	ft_putchar(' ');
 }
 
 int handle_echo(char **args, t_shell *sh)
 {
 	int i;
-
+	int j;
 	i = 1;
-	(void)sh;
 	while (args[i])
 	{
-		check_args(args[i]);
+		if (args[i][0] == '\'')
+		{
+			j = 0;
+			while (args[i][j])
+			{
+				ft_printf("%c", args[i][j]);
+				j++;
+			}
+		}
+		else
+			check_args(args[i], sh);
 		i++;
 	}
 	if (i > 1)
 		write(1, "\n", 1);
 	return (1);
 }
-
-/* Handle "" and '' */
-	// int i;
-	// int wd_len;
-
-	// i = 0;
-	// wd_len = 0;
-	// while (args[i] != NULL)
-	// 	i++;
-	// i--;
-	// wd_len = ft_strlen(args[i]);
-	// if ((args[1][0] == '\"' && args[i][wd_len - 1] == '\"') || (args[1][0] == '\'' && args[i][wd_len - 1] == '\''))

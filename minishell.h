@@ -76,4 +76,6 @@ t_env	*new_node(void);
 void	free_all_files(t_env *files);
 void	free_file(t_env *file);
 
+char *get_value(t_shell *sh, char *name);
+
 #endif

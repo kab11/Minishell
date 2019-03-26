@@ -85,14 +85,14 @@ int check_user(char *name, t_shell *sh)
 	return (-1);
 }
 
-char *get_pwd(t_shell *sh)
+char *get_value(t_shell *sh, char *name)
 {
 	t_env *tmp;
 
 	tmp = sh->env_info;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, "PWD") == 0)
+		if (ft_strcmp(tmp->key, name) == 0)
 			return (tmp->value);
 		tmp = tmp->next;
 	}
@@ -123,23 +123,23 @@ void change_dir(char *arg, t_shell *sh)
 		}
 		free(user);
 		name = "HOME";
-		find_env(name, get_pwd(sh), sh);
+		find_env(name, get_value(sh, "PWD"), sh);
 	}
 	else if (ft_strchr(arg, '-'))
 	{
 		name = "OLDPWD";
-		find_env(name, get_pwd(sh), sh);
+		find_env(name, get_value(sh, "PWD"), sh);
 	}
 	else if (ft_strcmp(arg, ".") == 0)
 	{
 		name = "PWD";
-		find_env(name, get_pwd(sh), sh);
+		find_env(name, get_value(sh, "PWD"), sh);
 	}
 	else
 	{
 		if (chdir(arg) == 0)
 		{
-			update_path(get_pwd(sh), sh);
+			update_path(get_value(sh, "PWD"), sh);
 			return;
 		}
 		printf("cd: no such file or directory: %s\n", arg);
