@@ -84,7 +84,7 @@ char				*ft_strrchr(const char *s, int c);
 char				**ft_strsplit(char const *s, char c);
 char				*ft_strstr(const char *str, const char *substr);
 char				*ft_strsub(char const *s, unsigned int start, size_t len);
-char				*ft_strtok(char *str, char *sep);
+char				*ft_strtok(char *str, const char delim);
 char				*ft_strtrim(char const *s);
 int					ft_tolower(int c);
 int					ft_toupper(int c);

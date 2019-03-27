@@ -12,32 +12,30 @@
 
 #include "libft.h"
 
-char	*ft_strtok(char *str, char *sep)
+char	*ft_strtok(char *str, const char delim)
 {
-	static char	*stock;
-	char		*ptr;
-	int			i;
+	static char		*stock = NULL;
+	char			*ptr;
+	int				flg;
 
-	i = 0;
+	flg = 0;
 	ptr = NULL;
-	stock = NULL;
 	if (str != NULL)
 		stock = ft_strdup(str);
 	while (*stock != '\0')
 	{
-		if (i == 0 && ft_strcmp(stock, sep) != 0)
+		if (flg == 0 && *stock != delim)
 		{
-			i = 1;
+			flg = 1;
 			ptr = stock;
 		}
-		else if (i == 1 && ft_strcmp(stock, sep) == 0)
+		else if (flg == 1 && *stock == delim)
 		{
 			*stock = '\0';
 			stock += 1;
 			break ;
 		}
-		stock++;
+		stock += 1;
 	}
-	// free (stock);
 	return (ptr);
 }

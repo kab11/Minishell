@@ -12,19 +12,6 @@
 
 #include "libft.h"
 
-// char				*ft_strndup(char *src, size_t n)
-// {
-// 	char			*dup;
-
-// 	dup = (char *)malloc(sizeof(char) * (n + 1));
-// 	if (dup)
-// 	{
-// 		ft_strncpy(dup, src, n);
-// 		dup[n] = '\0';
-// 	}
-// 	return (dup);
-// }
-
 static t_list		*get_file(t_list **list, int fd)
 {
 	t_list			*current;
@@ -90,7 +77,8 @@ int					get_next_line(const int fd, char **line)
 		return (GNL_ERROR);
 	bzero(buf, BUFF_SIZE + 1);
 	file = get_file(&list, fd);
-	while (ft_strchr(file->content, '\n') == NULL && (n = read(fd, buf, BUFF_SIZE)) > 0)
+	while (ft_strchr(file->content, '\n') == NULL
+		&& (n = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[n] = '\0';
 		holder = ft_strjoin(file->content, buf);

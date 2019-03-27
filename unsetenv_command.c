@@ -6,34 +6,38 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 20:34:02 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/15 20:34:11 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/27 00:34:14 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-** Unset removes environment variables from the list of variables that it tracks
+** Removes the first node of the linked list
 */
 
-void delete_head_node(t_env *head)
+void		delete_head_node(t_env *head)
 {
-	t_env *tmp;
+	t_env	*tmp;
 
+	tmp = NULL;
 	if (head->next == NULL)
-		return;
+		return ;
 	head->key = head->next->key;
 	head->value = head->next->value;
 	tmp = head->next;
 	head->next = head->next->next;
-	free(tmp);
-	return;
+	return ;
 }
 
-int number_of_args(char **args)
+/*
+** Keeps track of the number of enviroment variables that have been removed
+*/
+
+int			number_of_args(char **args)
 {
-	int i;
-	int count;
+	int		i;
+	int		count;
 
 	i = 1;
 	count = 0;
@@ -42,36 +46,57 @@ int number_of_args(char **args)
 	return (count);
 }
 
-void remove_env_var(char **args, t_shell *sh)
+/*
+** Removes enviroment variable from linked list
+*/
+
+void remove_link(t_env *prev)
 {
-	int i;
-	int count;
-	t_env *head;
-	t_env *prev;
-	t_env *tmp;
+	t_env	*tmp;
+
+	tmp = prev->next;
+	prev->next = prev->next->next;
+	free_file(tmp);	
+}
+
+/*
+** Locates and removes the chosen environment variable from the linked list
+*/
+
+void		remove_env_var(char **args, t_shell *sh)
+{
+	int		i;
+	int		count;
+	t_env	*head;
+	t_env	*prev;
+	// t_env	*tmp;
 
 	i = 0;
 	head = sh->env_info;
+	printf("head = %s\n", head->key);
 	while (args[++i])
 	{
 		if (ft_strcmp(head->key, args[i]) == 0)
 			delete_head_node(head);
 		prev = head;
 		while (prev->next != NULL && ft_strcmp(prev->next->key, args[i]) != 0)
-			prev = prev->next;	
+			prev = prev->next;
 		if (prev->next == NULL || ft_strcmp(prev->next->key, "_") == 0)
 		{
 			if ((count = number_of_args(args)) == i)
-				return;
+				return ;
 			prev = head;
 		}
-		tmp = prev->next;
-		prev->next = prev->next->next;
-		free_file(tmp);
+		else
+			remove_link(prev);
 	}
 }
 
-int handle_unsetenv(char **args, t_shell *sh)
+/*
+** Unset removes environment variables from the list of variables that it tracks
+*/
+
+int			handle_unsetenv(char **args, t_shell *sh)
 {
 	if (!args[1])
 		ft_printf("unset: not enough arguments\n");
