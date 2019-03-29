@@ -6,7 +6,7 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 12:36:16 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/27 00:22:53 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/28 21:37:16 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,51 +21,73 @@
 ** cd - : switch you to previous directory
 */
 
-void		tilda_handler(char *arg, char *name, t_shell *sh)
-{
-	char	*user;
-	int		tmp;
+/*
+** Updates the pathnames of the current and previous working directories
+*/
 
-	user = NULL;
-	tmp = 0;
-	if (arg[1])
+void		update_path(char *old, char *new, t_shell *sh)
+{
+	char	**arr;
+	char	*ntmp;
+	char	*otmp;
+
+	arr = (char**)malloc(sizeof(char*) * 3);
+	arr[1] = ft_strnew(PATH_MAX);
+	arr[2] = ft_strnew(PATH_MAX);
+	ntmp = ft_strjoin("PWD=", new);
+	otmp = ft_strjoin("OLDPWD=", old);
+	arr[0] = NULL;
+	arr[1] = ft_strcpy(arr[1], ntmp);
+	arr[2] = ft_strcpy(arr[2], otmp);
+	arr[3] = NULL;
+	handle_setenv(arr, sh);
+	free(ntmp);
+	free(otmp);
+	free(arr[1]);
+	free(arr[2]);
+	free(arr);
+}
+
+/*
+** Changes directories
+*/
+
+void		find_env(char *name, char *pwd, t_shell *sh)
+{
+	t_env	*tmp;
+	char	*cur;
+
+	tmp = sh->env_info;
+	while (tmp)
 	{
-		user = ft_strsub(arg, 1, ft_strlen(arg) - 1);
-		tmp = check_user(user, sh);
-		if (tmp < 0)
+		if (ft_strcmp(tmp->key, name) == 0)
 		{
-			ft_printf("cd: permission denied: /nfs/2018/%c/%s\n", arg[1], user);
-			free(user);
-			return ;
+			cur = tmp->value;
+			chdir(tmp->value);
+			update_path(pwd, tmp->value, sh);
+			break ;
 		}
+		tmp = tmp->next;
 	}
-	free(user);
-	name = "HOME";
-	find_env(name, get_value(sh, "PWD"), sh);
 }
 
 void		change_dir(char *arg, t_shell *sh)
 {
-	char	*name;
+	char	*pwd;
 
-	name = NULL;
+	pwd = get_value(sh, "PWD");
 	if (ft_strchr(arg, '~'))
-		tilda_handler(arg, name, sh);
+		tilda_handler(arg, sh);
 	else if (ft_strchr(arg, '-'))
-	{
-		name = "OLDPWD";
-		find_env(name, get_value(sh, "PWD"), sh);
-	}
+		find_env("OLDPWD", pwd, sh);
 	else if (ft_strcmp(arg, ".") == 0)
-	{
-		name = "PWD";
-		find_env(name, get_value(sh, "PWD"), sh);
-	}
+		return ;
 	else
 	{
 		if (chdir(arg) == 0)
 		{
-			update_path(get_value(sh, "PWD"), sh);
+			if (ft_strcmp(arg, "..") == 0)
+				update_path(pwd, get_value(sh, "HOME"), sh);
 			return ;
 		}
 		ft_printf("cd: no such file or directory: %s\n", arg);
@@ -74,9 +96,6 @@ void		change_dir(char *arg, t_shell *sh)
 
 int			handle_cd(char **args, t_shell *sh)
 {
-	char	*name;
-
-	name = NULL;
 	if (args[1])
 	{
 		if (args[2])
@@ -85,9 +104,6 @@ int			handle_cd(char **args, t_shell *sh)
 			change_dir(args[1], sh);
 	}
 	else
-	{
-		name = "HOME";
-		find_env(name, NULL, sh);
-	}
+		find_env("HOME", get_value(sh, "PWD"), sh);
 	return (1);
 }

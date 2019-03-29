@@ -45,7 +45,6 @@ typedef struct		s_env
 
 typedef struct		s_shell
 {
-	char			*display;
 	char			*prompt;
 	char			**arr;
 	char			*pwd;
@@ -55,17 +54,15 @@ typedef struct		s_shell
 
 typedef int	(t_fxnptr)(char**, t_shell*);
 
-struct				s_dispatch
+typedef struct		s_dispatch
 {
 	char			*key;
 	t_fxnptr		*fxnptr;
-};
+}					t_dispatch;
 
-void				mini_loop(t_shell *sh);
-
-char				**parse_user_input(char *line);
 int					execute(char **arr, t_shell *sh);
 void				get_env_vars(t_shell *sh, char **envp);
+void				mini_loop(t_shell *sh);
 
 int					handle_cd(char **args, t_shell *sh);
 int					handle_echo(char **args, t_shell *sh);
@@ -74,11 +71,11 @@ int					handle_exit(char **args, t_shell *sh);
 int					handle_setenv(char **args, t_shell *sh);
 int					handle_unsetenv(char **args, t_shell *sh);
 
-void				get_env_vars(t_shell *sh, char **envp);
 void				free_all_files(t_env *files);
 void				free_file(t_env *file);
 void				free_env(char **env);
 void				free_struct(t_shell *sh);
+void				free_args(char **args);
 
 void				check_args(char *str, t_shell *sh);
 int					check_dir(char *name);
@@ -88,7 +85,7 @@ t_env				*new_node(void);
 
 int					check_user(char *name, t_shell *sh);
 void				find_env(char *name, char *pwd, t_shell *sh);
-void				update_path(char *pwd, t_shell *sh);
 void				check_error(char *p, char *arg);
+void				tilda_handler(char *arg, t_shell *sh);
 
 #endif

@@ -36,7 +36,7 @@ void		add_new_env_var(t_env *prev, t_env *cur, char *env_var, char *val)
 	cur->next = NULL;
 }
 
-void search_list(t_env *cur, char *key, char *val)
+void		search_list(t_env *cur, char *key, char *val)
 {
 	t_env	*prev;
 

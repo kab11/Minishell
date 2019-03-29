@@ -6,7 +6,7 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:27:10 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/27 00:19:12 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/28 21:39:10 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void		get_str_arr(int n, char **envp, t_shell *sh)
 	int		i;
 
 	i = 0;
-	tmp = (char **)malloc(n * sizeof(char*) + 1);
+	tmp = (char **)malloc(n * sizeof(char*));
 	while (envp[i])
 	{
 		tmp[i] = ft_strdup(envp[i]);
@@ -51,7 +51,6 @@ void		get_env_vars(t_shell *sh, char **envp)
 	{
 		node = new_node();
 		sub = ft_strchr(envp[i], '=') - envp[i];
-		// node->next = new_node();
 		node->key = ft_strndup(envp[i], sub);
 		node->value = ft_strdup(envp[i] + sub + 1);
 		if (sh->env_info != NULL)
@@ -59,7 +58,6 @@ void		get_env_vars(t_shell *sh, char **envp)
 		else
 			sh->env_info = node;
 		tmp = node;
-		free(node->next);
 	}
 	get_str_arr(i, envp, sh);
 	tmp->next = NULL;
@@ -69,15 +67,13 @@ int			main(int argc, char **argv, char **envp)
 {
 	t_shell	sh;
 
-	ft_printf("Starting minishell\n");
 	(void)argc;
 	(void)argv;
+	(void)envp;
+	ft_printf("Starting minishell\n");
 	ft_bzero(&sh, sizeof(sh));
 	get_env_vars(&sh, envp);
 	mini_loop(&sh);
-	free_all_files(sh.env_info);
 	free_struct(&sh);
-	// while (1)
-	// 	;
 	return (0);
 }

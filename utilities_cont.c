@@ -6,53 +6,11 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 13:16:27 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/27 13:16:30 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/28 21:29:04 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-** Updates the pathnames of the current and previous working directories
-*/
-
-void			update_path(char *pwd, t_shell *sh)
-{
-	char		**arr;
-	char		*tmp;
-
-	arr = (char**)malloc(sizeof(char*) * 4);
-	arr[0] = NULL;
-	tmp = ft_strnew(PATH_MAX);
-	getcwd(tmp, PATH_MAX);
-	arr[1] = ft_strjoin("PWD=", tmp);
-	arr[2] = ft_strjoin("OLDPWD=", pwd);
-	arr[3] = 0;
-	handle_setenv(arr, sh);
-	free(tmp);
-	free_env(arr);
-}
-
-/*
-** Changes directories
-*/
-
-void			find_env(char *name, char *pwd, t_shell *sh)
-{
-	t_env		*tmp;
-
-	tmp = sh->env_info;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->key, name) == 0)
-		{
-			chdir(tmp->value);
-			update_path(pwd, sh);
-			break ;
-		}
-		tmp = tmp->next;
-	}
-}
 
 /*
 ** Check the name of the current user
@@ -91,4 +49,26 @@ void			check_error(char *p, char *arg)
 		ft_printf("ash: no such file or directory: %s\n", arg);
 	else if (!p)
 		ft_printf("ash: command not found: %s\n", arg);
+}
+
+void			tilda_handler(char *arg, t_shell *sh)
+{
+	char		*user;
+	int			tmp;
+
+	user = NULL;
+	tmp = 0;
+	if (arg[1])
+	{
+		user = ft_strsub(arg, 1, ft_strlen(arg) - 1);
+		tmp = check_user(user, sh);
+		if (tmp < 0)
+		{
+			ft_printf("cd: permission denied: /nfs/2018/%c/%s\n", arg[1], user);
+			free(user);
+			return ;
+		}
+	}
+	free(user);
+	find_env("HOME", get_value(sh, "PWD"), sh);
 }

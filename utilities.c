@@ -6,7 +6,7 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/26 22:45:44 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/27 00:35:31 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/28 22:48:54 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,24 @@ t_env		*new_node(void)
 	return (new_node);
 }
 
+char		*get_value(t_shell *sh, char *name)
+{
+	t_env	*tmp;
+
+	tmp = sh->env_info;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, name) == 0)
+			return (tmp->value);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 void		expansion(char *str, t_shell *sh)
 {
 	t_env	*list;
+	char	*val;
 
 	list = sh->env_info;
 	if (str[0] == '~')
@@ -31,7 +46,9 @@ void		expansion(char *str, t_shell *sh)
 	else if (str[0] == '$')
 	{
 		str = str + 1;
-		ft_printf("%s", get_value(sh, str));
+		if (!(val = get_value(sh, str)))
+			return ;
+		ft_printf("%s", val);
 	}
 }
 
@@ -54,18 +71,4 @@ int			check_dir(char *name)
 	closedir(d_stream);
 	d_stream = NULL;
 	return (0);
-}
-
-char		*get_value(t_shell *sh, char *name)
-{
-	t_env	*tmp;
-
-	tmp = sh->env_info;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->key, name) == 0)
-			return (tmp->value);
-		tmp = tmp->next;
-	}
-	return (NULL);
 }

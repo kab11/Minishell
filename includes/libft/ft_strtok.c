@@ -6,36 +6,47 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:57:16 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/21 12:57:21 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/28 21:36:35 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strtok(char *str, const char delim)
+void				token_setup(size_t pos, char *buf, char *str, char *token)
 {
-	static char		*stock = NULL;
-	char			*ptr;
-	int				flg;
-
-	flg = 0;
-	ptr = NULL;
-	if (str != NULL)
-		stock = ft_strdup(str);
-	while (*stock != '\0')
+	pos = 0;
+	buf = str;
+	if (token)
 	{
-		if (flg == 0 && *stock != delim)
-		{
-			flg = 1;
-			ptr = stock;
-		}
-		else if (flg == 1 && *stock == delim)
-		{
-			*stock = '\0';
-			stock += 1;
-			break ;
-		}
-		stock += 1;
+		free(token);
+		token = NULL;
 	}
-	return (ptr);
+	token = ft_strnew(ft_strlen(buf) + 1);
+}
+
+char				*ft_strtok(char *str, const char sep)
+{
+	int				i;
+	static size_t	pos = 0;
+	static char		*buf = 0;
+	static char		*token = NULL;
+
+	i = 0;
+	if (str)
+		token_setup(pos, buf, str, token);
+	if (pos >= ft_strlen(buf) || !buf)
+		return (0);
+	ft_memset(token, 0, ft_strlen(buf) + 1);
+	while (pos < ft_strlen(buf))
+	{
+		if (buf[pos] == sep)
+		{
+			pos++;
+			return (token);
+		}
+		token[i] = buf[pos];
+		i++;
+		pos++;
+	}
+	return (token);
 }

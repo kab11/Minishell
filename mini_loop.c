@@ -6,27 +6,14 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/26 22:41:09 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/27 00:21:07 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/28 21:38:05 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-** reads a line from stdin using get_next_line()
-*/
-
-char		*get_info(void)
-{
-	char	*line;
-
-	if (get_next_line(0, &line) == 1)
-		return (line);
-	return (NULL);
-}
-
-/*
-** stores current location and displays the shell prompt
+** Gets location of current directory to display the prompt
 */
 
 void		set_pwd(t_shell *sh)
@@ -34,12 +21,14 @@ void		set_pwd(t_shell *sh)
 	char	*curr;
 	char	*str;
 
-	free(sh->prompt);
+	sh->prompt != NULL ? free(sh->prompt) : 0;
+	sh->prompt = NULL;
 	curr = ft_strnew(PATH_MAX);
 	getcwd(curr, PATH_MAX);
 	str = ft_strrchr(curr, '/') + 1;
 	sh->prompt = ft_strdup(str);
 	free(curr);
+	curr = NULL;
 }
 
 /*
@@ -49,7 +38,6 @@ void		set_pwd(t_shell *sh)
 void		mini_loop(t_shell *sh)
 {
 	int		status;
-	char	*line;
 	char	**args;
 
 	status = 1;
@@ -58,13 +46,19 @@ void		mini_loop(t_shell *sh)
 		set_pwd(sh);
 		ft_printf(BOLDCYAN "🍻  %s 🍻 " RESET, sh->prompt);
 		ft_printf(BOLDRED " >> " RESET);
-		line = get_info();
-		sh->line = ft_strdup(line);
-		if (ft_strcmp(line, "") == 0)
+		sh->line != NULL ? free(sh->line) : 0;
+		sh->line = NULL;
+		get_next_line(1, &sh->line);
+		if (ft_strcmp(sh->line, "") == 0)
 			continue;
-		args = parse_user_input(line);
+		args = ft_strsplit(sh->line, ' ');
+		if (ft_strcmp(args[0], "$"))
+		{
+			expansion(args[0], sh);
+			ft_printf("\n");
+			continue;
+		}
 		status = execute(args, sh);
-		free(line);
+		free_env(args);
 	}
-	free_env(args);
 }

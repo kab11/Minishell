@@ -39,13 +39,13 @@ void		launch(char *ex, char **arr, t_shell *sh)
 	if (childpid < 0)
 	{
 		ft_printf("ash: unable to fork process: %d\n", childpid);
-		exit(1);
+		exit(-1);
 	}
 	if (childpid == 0)
 	{
 		if (execve(ex, arr, sh->arr) == -1)
 			ft_printf("ash: permission denied: %s\n", ex);
-		exit(0);
+		exit(-1);
 	}
 	else
 		wait_ret = waitpid(childpid, &status, 0);

@@ -50,13 +50,13 @@ int			number_of_args(char **args)
 ** Removes enviroment variable from linked list
 */
 
-void remove_link(t_env *prev)
+void		remove_link(t_env *prev)
 {
 	t_env	*tmp;
 
 	tmp = prev->next;
 	prev->next = prev->next->next;
-	free_file(tmp);	
+	free_file(tmp);
 }
 
 /*
@@ -69,11 +69,9 @@ void		remove_env_var(char **args, t_shell *sh)
 	int		count;
 	t_env	*head;
 	t_env	*prev;
-	// t_env	*tmp;
 
 	i = 0;
 	head = sh->env_info;
-	printf("head = %s\n", head->key);
 	while (args[++i])
 	{
 		if (ft_strcmp(head->key, args[i]) == 0)

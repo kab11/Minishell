@@ -23,7 +23,6 @@ SRC		=	cd_command.c \
 			main.c \
 			mini_execute.c \
 			mini_loop.c \
-			mini_parse.c \
 			setenv_command.c \
 			unsetenv_command.c \
 			utilities.c \
