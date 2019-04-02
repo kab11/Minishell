@@ -6,7 +6,7 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:27:10 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/28 21:39:10 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/29 15:45:54 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void		get_str_arr(int n, char **envp, t_shell *sh)
 	int		i;
 
 	i = 0;
-	tmp = (char **)malloc(n * sizeof(char*));
+	tmp = (char **)malloc((n + 1) * sizeof(char*));
 	while (envp[i])
 	{
 		tmp[i] = ft_strdup(envp[i]);
@@ -69,7 +69,6 @@ int			main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	(void)envp;
 	ft_printf("Starting minishell\n");
 	ft_bzero(&sh, sizeof(sh));
 	get_env_vars(&sh, envp);

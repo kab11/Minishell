@@ -72,3 +72,22 @@ void			tilda_handler(char *arg, t_shell *sh)
 	free(user);
 	find_env("HOME", get_value(sh, "PWD"), sh);
 }
+
+int				ft_this_list_size(t_env *begin_list)
+{
+	t_env		*current;
+	int			i;
+
+	i = 0;
+	current = begin_list;
+	if (current)
+	{
+		while (current->next)
+		{
+			current = current->next;
+			i++;
+		}
+		i++;
+	}
+	return (i);
+}

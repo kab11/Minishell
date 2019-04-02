@@ -31,7 +31,7 @@ void		update_path(char *old, char *new, t_shell *sh)
 	char	*ntmp;
 	char	*otmp;
 
-	arr = (char**)malloc(sizeof(char*) * 3);
+	arr = (char**)malloc(sizeof(char*) * 4);
 	arr[1] = ft_strnew(PATH_MAX);
 	arr[2] = ft_strnew(PATH_MAX);
 	ntmp = ft_strjoin("PWD=", new);

@@ -6,7 +6,7 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/14 13:13:54 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/27 00:29:38 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/29 15:42:09 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,41 @@ struct s_dispatch builtins[BUILTIN_COUNT] = {
 };
 
 /*
+** Updates environment variables array (/usr/bin/env)
+*/
+
+void		free_and_execute(t_shell *sh, int i)
+{
+	int		j;
+	char	**tmp;
+	char	*join;
+	char	*str;
+	t_env	*list;
+
+	j = -1;
+	free_env(sh->arr);
+	list = sh->env_info;
+	tmp = (char **)malloc((i + 1) * sizeof(char *));
+	while (++j < i)
+	{
+		join = ft_strjoin(list->key, "=");
+		str = ft_strjoin(join, list->value);
+		tmp[j] = ft_strdup(str);
+		free(join);
+		free(str);
+		list = list->next;
+	}
+	tmp[j] = NULL;
+	sh->arr = tmp;
+}
+
+/*
 ** Starts a new process using the fork() & execve() system calls
 */
 
 void		launch(char *ex, char **arr, t_shell *sh)
 {
+	int		len;
 	int		status;
 	pid_t	childpid;
 	pid_t	wait_ret;
@@ -43,6 +73,8 @@ void		launch(char *ex, char **arr, t_shell *sh)
 	}
 	if (childpid == 0)
 	{
+		len = ft_this_list_size(sh->env_info);
+		free_and_execute(sh, len);
 		if (execve(ex, arr, sh->arr) == -1)
 			ft_printf("ash: permission denied: %s\n", ex);
 		exit(-1);

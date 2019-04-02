@@ -87,5 +87,6 @@ int					check_user(char *name, t_shell *sh);
 void				find_env(char *name, char *pwd, t_shell *sh);
 void				check_error(char *p, char *arg);
 void				tilda_handler(char *arg, t_shell *sh);
+int					ft_this_list_size(t_env *begin_list);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kblack <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/26 22:41:09 by kblack            #+#    #+#             */
-/*   Updated: 2019/03/28 21:38:05 by kblack           ###   ########.fr       */
+/*   Updated: 2019/03/29 15:47:29 by kblack           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void		mini_loop(t_shell *sh)
 {
 	int		status;
 	char	**args;
+	char	*trim;
 
 	status = 1;
 	while (status)
@@ -49,16 +50,15 @@ void		mini_loop(t_shell *sh)
 		sh->line != NULL ? free(sh->line) : 0;
 		sh->line = NULL;
 		get_next_line(1, &sh->line);
-		if (ft_strcmp(sh->line, "") == 0)
-			continue;
-		args = ft_strsplit(sh->line, ' ');
-		if (ft_strcmp(args[0], "$"))
+		trim = ft_strtrim(sh->line);
+		if (ft_strcmp(trim, "") == 0)
 		{
-			expansion(args[0], sh);
-			ft_printf("\n");
+			free(trim);
 			continue;
 		}
+		args = ft_strsplit(trim, ' ');
 		status = execute(args, sh);
+		free(trim);
 		free_env(args);
 	}
 }
