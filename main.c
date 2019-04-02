@@ -69,7 +69,7 @@ int			main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	ft_printf("Starting minishell\n");
+	ft_printf(BOLDMAGENTA "~*~*~ Starting minishell ~*~*~\n\n" RESET);
 	ft_bzero(&sh, sizeof(sh));
 	get_env_vars(&sh, envp);
 	mini_loop(&sh);

@@ -31,7 +31,7 @@
 
 # define BOLDRED			"\x1b[31;1m"
 # define ANSI_COLOR_RED		"\x1b[31m"
-# define ANSI_COLOR_MAGENTA	"\x1b[35m"
+# define BOLDMAGENTA		"\033[1m\033[31m\033[4m"
 # define BOLDCYAN			"\033[1m\033[36m"
 # define RESET				"\x1b[0m"
 # define BACK_YELL			"\x1b[47m"
